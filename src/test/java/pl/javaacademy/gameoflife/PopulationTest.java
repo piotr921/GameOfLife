@@ -17,57 +17,86 @@ public class PopulationTest {
     @DataProvider
     private Object[][] populationSizeProvider() {
         return new Object[][]{
-                {100, 100},
-                {20, 20},
-                {255, 255}
+                {10},
+                {6},
+                {8}
         };
     }
 
     @DataProvider
     private Object[][] aliveCellsProvider() {
         return new Object[][]{
-                {100, Arrays.asList(10, 15, 25, 30)},
-                {25, Arrays.asList(0, 24)},
-                {100, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)}
+                {10, Arrays.asList(10, 15, 25, 30)},
+                {5, Arrays.asList(0, 24)},
+                {10, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)}
+        };
+    }
+
+    @DataProvider
+    private Object[][] cornerProvider() {
+        return new Object[][]{
+                {3, Arrays.asList(0, 2, 6, 8)},
+                {5, Arrays.asList(0, 4, 20, 24)},
+                {10, Arrays.asList(0, 9, 90, 99)},
+                {7, Arrays.asList(0, 6, 42, 48)}
         };
     }
     // endregion
 
     @Test(dataProvider = "populationSizeProvider")
-    public void populationShouldContainsNumberOfCells(int givenSize, int expectedSize) {
+    public void populationShouldContainsNumberOfCells(int givenSize) {
         // When
         Population population = new Population(givenSize);
         // Then
-        assertEquals(expectedSize, population.getSize());
+        assertEquals(givenSize * givenSize, population.getSize());
     }
 
     @Test(dataProvider = "populationSizeProvider")
-    public void shouldHaveOnlyDeadCellsInNwPopulation(int givenSize, int expectedSize) {
+    public void shouldInitializeEveryCellAsDead(int givenSize) {
         // Given
         Population population = new Population(givenSize);
 
         // When
-        long deadCells = IntStream.range(0, givenSize)
-                .filter(index -> population.getStateOfCell(index).equals(CellState.DEAD))
+        long noOfDeadCells = IntStream.range(0, givenSize * givenSize)
+                .filter(index -> population.getCellStateByIndex(index).equals(CellState.DEAD))
                 .count();
+
         // Then
-        assertEquals(expectedSize, deadCells);
+        assertEquals(givenSize * givenSize, noOfDeadCells);
     }
 
     @Test(dataProvider = "aliveCellsProvider")
-    public void shouldChangeStateOfSelectedCells(int size, List<Integer> aliveCells) {
+    public void shouldSetCellByIndex(int givenSize, List<Integer> aliveCellIndexes) {
         // Given
-        Population population = new Population(size);
+        Population population = new Population(givenSize);
 
         // When
-        aliveCells.forEach(cellIndex -> population.setCellState(cellIndex, CellState.ALIVE));
+        aliveCellIndexes.forEach(index ->
+                population.updateCellStateByIndex(index, CellState.ALIVE));
 
         // Then
-        List<Integer> readAliveCells = IntStream.range(0, population.getSize())
-                .filter(cellIndex -> population.getStateOfCell(cellIndex).equals(CellState.ALIVE))
+        List<Integer> readAliveIndexes = IntStream.range(0, givenSize * givenSize)
+                .filter(index -> population.getCellStateByIndex(index).equals(CellState.ALIVE))
                 .boxed().collect(Collectors.toList());
 
-        assertEquals(aliveCells.size(), readAliveCells.size());
-        assertTrue(aliveCells.containsAll(readAliveCells));
+        assertEquals(aliveCellIndexes.size(), readAliveIndexes.size());
+        assertTrue(aliveCellIndexes.containsAll(readAliveIndexes));
+    }
+
+    @Test(dataProvider = "cornerProvider")
+    public void shouldReturnCornerTypeForProperFields(int givenSize,
+                                                      List<Integer> cornerIndexes) {
+        // Given
+        Population population = new Population(givenSize);
+
+        // When
+        List<Integer> readCornerIndexes = IntStream.range(0, givenSize * givenSize)
+                .filter(index -> population.getFieldTypeByIndex(index).equals(FieldType.CORNER))
+                .boxed().collect(Collectors.toList());
+
+        // Then
+        assertEquals(cornerIndexes.size(), readCornerIndexes.size());
+        assertTrue(cornerIndexes.containsAll(readCornerIndexes));
+
     }
 }
