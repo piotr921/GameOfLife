@@ -6,19 +6,37 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class FieldInitializer {
-
     private List<Integer> cornerIndexes;
-    private List<Integer> borderIndexes;
+    private Integer topLeftCornerIndex;
+    private Integer topRightCornerIndex;
+    private Integer downLeftCornerIndex;
+    private Integer downRightCornerIndex;
+    private List<Integer> topBorderIndexes;
+    private List<Integer> leftBorderIndexes;
+    private List<Integer> rightBorderIndexes;
+    private List<Integer> downBorderIndexes;
 
     FieldType selectFieldType(int boardSize, int cellIndex) {
         initializeCornerIndexes(boardSize);
         initializeBorderIndexes(boardSize);
         FieldType selectedType;
-        //search for corners
-        if (cornerIndexes.contains(cellIndex)) {
-            selectedType = FieldType.CORNER;
-        } else if (borderIndexes.contains(cellIndex)) {
-            selectedType = FieldType.BORDER;
+
+        if (topLeftCornerIndex == cellIndex) {
+            selectedType = FieldType.TOP_LEFT_CORNER;
+        } else if (topRightCornerIndex == cellIndex) {
+            selectedType = FieldType.TOP_RIGHT_CORNER;
+        } else if (downLeftCornerIndex == cellIndex) {
+            selectedType = FieldType.DOWN_LEFT_CORNER;
+        } else if (downRightCornerIndex == cellIndex) {
+            selectedType = FieldType.DOWN_RIGHT_CORNER;
+        } else if (topBorderIndexes.contains(cellIndex)) {
+            selectedType = FieldType.TOP_BORDER;
+        } else if (leftBorderIndexes.contains(cellIndex)) {
+            selectedType = FieldType.LEFT_BORDER;
+        } else if (rightBorderIndexes.contains(cellIndex)) {
+            selectedType = FieldType.RIGHT_BORDER;
+        } else if (downBorderIndexes.contains(cellIndex)) {
+            selectedType = FieldType.DOWN_BORDER;
         } else {
             selectedType = FieldType.MIDDLE;
         }
@@ -26,19 +44,32 @@ class FieldInitializer {
     }
 
     private void initializeCornerIndexes(int boardSize) {
+        topLeftCornerIndex = 0;
+        topRightCornerIndex = boardSize - 1;
+        downLeftCornerIndex = (boardSize * boardSize) - boardSize;
+        downRightCornerIndex = boardSize * boardSize - 1;
+
+        initializeCornerIndexesList();
+    }
+
+    private void initializeCornerIndexesList() {
         cornerIndexes = new ArrayList<>();
-        cornerIndexes.add(0);
-        cornerIndexes.add(boardSize - 1);
-        cornerIndexes.add((boardSize * boardSize) - boardSize);
-        cornerIndexes.add(boardSize * boardSize - 1);
+        cornerIndexes.add(topLeftCornerIndex);
+        cornerIndexes.add(topRightCornerIndex);
+        cornerIndexes.add(downLeftCornerIndex);
+        cornerIndexes.add(downRightCornerIndex);
     }
 
     private void initializeBorderIndexes(int boardSize) {
-        borderIndexes = new ArrayList<>();
-        borderIndexes.addAll(findLeftBorderIndexes(boardSize));
-        borderIndexes.addAll(findRightBorderIndexes(boardSize));
-        borderIndexes.addAll(findTopBorderIndexes(boardSize));
-        borderIndexes.addAll(findBottomBorderIndexes(boardSize));
+        topBorderIndexes = new ArrayList<>();
+        leftBorderIndexes = new ArrayList<>();
+        rightBorderIndexes = new ArrayList<>();
+        downBorderIndexes = new ArrayList<>();
+
+        topBorderIndexes.addAll(findLeftBorderIndexes(boardSize));
+        leftBorderIndexes.addAll(findRightBorderIndexes(boardSize));
+        rightBorderIndexes.addAll(findTopBorderIndexes(boardSize));
+        downBorderIndexes.addAll(findBottomBorderIndexes(boardSize));
     }
 
     private List<Integer> findLeftBorderIndexes(int boardSize) {
