@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 class Population {
-    private Map<Integer, CellState> cells;
+    private Map<Integer, Cell> cells;
 
     Population(int size) {
         cells = new HashMap<>();
-        IntStream.range(0, size).forEach(index -> cells.put(index, CellState.DEAD));
+        IntStream.range(0, size).forEach(index -> cells.put(index, new Cell()));
     }
 
     int getSize() {
@@ -17,10 +17,12 @@ class Population {
     }
 
     CellState getStateOfCell(int cellIndex) {
-        return cells.get(cellIndex);
+        return cells.get(cellIndex).getState();
     }
 
     void setCellState(int cellIndex, CellState newState) {
-        cells.put(cellIndex, newState);
+        Cell newCell = cells.get(cellIndex);
+        newCell.setState(newState);
+        cells.put(cellIndex, newCell);
     }
 }
