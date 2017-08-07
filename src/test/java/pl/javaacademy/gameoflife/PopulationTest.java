@@ -83,7 +83,7 @@ public class PopulationTest {
         assertTrue(aliveCellIndexes.containsAll(readAliveIndexes));
     }
 
-    @Test(dataProvider = "cornerProvider")
+/*    @Test(dataProvider = "cornerProvider")
     public void shouldReturnCornerTypeForProperFields(int givenSize,
                                                       List<Integer> cornerIndexes) {
         // Given
@@ -98,5 +98,5 @@ public class PopulationTest {
         assertEquals(cornerIndexes.size(), readCornerIndexes.size());
         assertTrue(cornerIndexes.containsAll(readCornerIndexes));
 
-    }
+    }*/
 }

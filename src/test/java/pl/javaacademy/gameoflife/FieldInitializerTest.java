@@ -51,7 +51,7 @@ public class FieldInitializerTest {
         };
     }
 
-    @DataProvider
+/*    @DataProvider
     private Object[][] allTypesProvider() {
         return new Object[][]{
                 {3, Arrays.asList(
@@ -59,10 +59,10 @@ public class FieldInitializerTest {
                         BORDER, MIDDLE, BORDER,
                         CORNER, BORDER, CORNER)}
         };
-    }
+    }*/
     // endregion
 
-    @Test(dataProvider = "cornerIndexProvider")
+/*    @Test(dataProvider = "cornerIndexProvider")
     public void shouldRecognizeFieldAsCorner(int givenSize, int index) {
         // Given
         FieldInitializer initializer = new FieldInitializer();
@@ -72,8 +72,9 @@ public class FieldInitializerTest {
 
         // Then
         assertEquals(recognizedType, CORNER);
-    }
+    }*/
 
+/*
     @Test(dataProvider = "borderIndexProvider")
     public void shouldRecognizeFieldAsBorder(int givenSize, int index) {
         // Given
@@ -85,6 +86,7 @@ public class FieldInitializerTest {
         // Then
         assertEquals(recognizedType, BORDER);
     }
+*/
 
     @Test(dataProvider = "allTypesProvider")
     public void shouldRecognizeAllFieldsTypes(int givenSize, List<FieldType> expectedResults) {

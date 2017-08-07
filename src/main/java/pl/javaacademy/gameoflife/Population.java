@@ -21,6 +21,10 @@ class Population {
         return cells.size();
     }
 
+    Map<Field, Cell> getCells() {
+        return cells;
+    }
+
     CellState getCellStateByIndex(int index) {
         return cells.entrySet().stream()
                 .filter(cell -> index == cell.getKey().getIndex())
@@ -43,6 +47,13 @@ class Population {
                 .collect(Collectors.toList())
                 .get(0)
                 .getKey();
+    }
+
+    long noOfAliveNeighbours(int boardSize, int cellIndex) {
+        return getFieldTypeByIndex(cellIndex).calculateNeighboursIndexes(boardSize, cellIndex)
+                .stream()
+                .filter(index -> getCellStateByIndex(index).equals(CellState.ALIVE))
+                .count();
     }
 
     FieldType getFieldTypeByIndex(int index) {

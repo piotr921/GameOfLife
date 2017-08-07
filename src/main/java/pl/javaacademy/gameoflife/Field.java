@@ -9,11 +9,26 @@ class Field {
         this.type = type;
     }
 
-    public int getIndex() {
+    int getIndex() {
         return index;
     }
 
-    public FieldType getType() {
+    FieldType getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Field field = (Field) o;
+
+        return index == field.index;
+    }
+
+    @Override
+    public int hashCode() {
+        return index;
     }
 }

@@ -14,4 +14,8 @@ class Cell {
     void setState(CellState state) {
         this.state = state;
     }
+
+    void displayCellState(){
+        state.displayState();
+    }
 }
